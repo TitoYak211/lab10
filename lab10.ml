@@ -469,7 +469,7 @@ Formulate the recurrence equations and determine the time
 complexity of the sum function, defined below.
 ......................................................................*)
 
-et rec sum (x : int list) : int =
+let rec sum (x : int list) : int =
   match x with
   | [] -> 0
   | h :: t -> h + sum t;;
