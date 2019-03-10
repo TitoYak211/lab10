@@ -29,7 +29,7 @@ specified length of random integers between 0 and 999.
 ....................................................................*)
 
 let random_list (length : int) : int list =
-  failwith "random_list not implemented" ;;
+  List.init length (fun _ -> Random.int 1000) ;;
 
 (*....................................................................
 Exercise 2: Write a function, time_sort, that, given an int list ->
@@ -38,7 +38,8 @@ sort takes.
 ....................................................................*)
 
 let time_sort (sort : int list -> int list) (lst : int list) : float =
-  failwith "time_sort not implemented";;
+  let _, time = CS51.call_timed sort lst in
+  time;;
 
 (* We've provided implementations of merge sort and insertion sort
 here as modules satisfying the SORT signature so that you have some
@@ -107,7 +108,7 @@ module MergeSort : SORT =
 Exercise 3: List the functions provided by the InsertionSort
 module. List the functions provided by the MergeSort module.
 ....................................................................*)
-
+sort : ('a -> 'a -> bool) -> 'a list -> 'a list
   
 (*....................................................................
 Exercise 4: Compare the time it takes for merge sort and insertion
@@ -122,10 +123,11 @@ Fill in the table below:
                 |    List length 10    |  List length 1000
                 |    Time (seconds)    |  Time (seconds)
 ------------------------------------------------------------
-Insertion Sort  |                      |
+Insertion Sort  |   0.00000215         | 0.0107
 ------------------------------------------------------------
-Merge Sort      |                      |
+Merge Sort      | 0.00000405           | 0.000967
 ------------------------------------------------------------
+
 
 ......................................................................*)
 
@@ -177,20 +179,19 @@ let exercise5a () : complexity list =
 
 (* f(x) = 0 *)
 let exercise5b () : complexity list =
-  failwith "exercise5b not implemented" ;;
-
-(* f(x) = 3 x^2 + 2 x + 4 *)
-let exercise5c () : complexity list=
-  failwith "exercise5c not implemented" ;;
+  [Constant; Logarithmic; Linear; LogLinear; Quadratic; Cubic; Exponential] ;;
+  
+(* f(x) = 3 x^2 + 2 x + 4  *)
+let exercise5c () : complexity list =
+  [Quadratic; Cubic; Exponential] ;;
 
 (* f(x) = (2 x - 3) log(x) + 100 x *)
 let exercise5d () : complexity list =
-  failwith "exercise5d not implemented" ;;
+  [LogLinear; Quadratic; Cubic; Exponential] ;;
 
 (* f(x) = x (x^2 + x) *)
 let exercise5e () : complexity list =
-  failwith "exercise5e not implemented" ;;
-
+  [Cubic; Exponential] ;;
 
 (* One advantage of big-O is that we can disregard constants in
 considering asymptotic performance of functions. We saw empirically
@@ -238,7 +239,7 @@ sorted by DelayMergeSort and InsertSort until DelayMergeSort runs
 faster than InsertSort. Record the size of a list for which this is
 true below. *)
    
-let exercise6 () = failwith "exercise6 not implemented"
+let exercise6 () = 10000 ;;
 
 (* Big-O also allows us to disregard constant multiplicative factors. In
 this exercise, we work with a version of MergeSort that sorts a given
@@ -275,7 +276,7 @@ Double Merge Sort |                      |
 (* Now record a list length for which you found DoubleMergeSort
 sorted faster than InsertSort. *)
    
-let exercise7 () = failwith "exercise6 not implemented"
+let exercise7 () = 1000 ;;
 
 (* An additional nice property of big-O is the ability to disregard
 lower-order terms of a function. In the reading, we found that:
@@ -315,7 +316,7 @@ Extra Term Merge Sort |                      |
 
 (* Now record a list length for which ExtraTermMergeSort works faster
     than InsertSort. *)
-let exercise8 () = failwith "exercise6 not implemented"
+let exercise8 () = 1000 ;;
 
 (*......................................................................
 Exercise 9: More big-O
@@ -334,26 +335,33 @@ type complexity =
     | Exponential ;;
 ......................................................................*)
 
+
 (* f(x) = 10000 *)
 let exercise9a () : complexity list =
-  failwith "exercise9a not implemented" ;;
-  
+  [Constant; Logarithmic; Linear; LogLinear; Quadratic; Cubic; Exponential] ;;
+
 (* f(x) = 50x^100 + x^2 *)
 let exercise9b () : complexity list =
-  failwith "exercise9b not implemented" ;;
+  [Exponential] ;;
 
 (* f(x) = 30xlog(x) + 50x + 70 *)
-
 let exercise9c () : complexity list =
-  failwith "exercise9c not implemented" ;;
+  [LogLinear; Quadratic; Cubic; Exponential] ;;
 
 (* f(x) = 30x^2 * log(x) *)
 let exercise9d () : complexity list =
-  failwith "exercise9d not implemented" ;;
+  [Cubic; Exponential] ;;
+(* Note: This is a bit tricky. Because we are multiplying 30x^2 and
+   log(x), we can't simply disregard the log(n), as we could do if
+   adding it. 30x^2 * log(x) will not be quadratic, as the log(x) will
+   grow faster than any constant we multiply x^2 by. However, log(x)
+   grows slower than n, so we know x^2 * log(x) will grow more slowly
+   than x^2 * x, so f must grow more slowly than x^3, making the f
+   O(x^3) and O(2^x) *)
 
 (* f(x) = x + 60log(x) *)
 let exercise9e () : complexity list =
-  failwith "exercise9e not implemented" ;;
+    [Linear; LogLinear; Quadratic; Cubic; Exponential] ;;
 
 (*======================================================================
 Part 3: Recurrence Equations
@@ -461,19 +469,20 @@ Formulate the recurrence equations and determine the time
 complexity of the sum function, defined below.
 ......................................................................*)
 
-let rec sum (x : int list) : int =
+et rec sum (x : int list) : int =
   match x with
   | [] -> 0
   | h :: t -> h + sum t;;
 
 (* Describe the time complexity recurrence equations for sum as an
 ocaml function *)
-let time_sum (n : int) : int =
-  failwith "time_sum not yet implemented" ;;
+let rec time_sum (n : int) : int =
+  if n = 0 then k
+  else k + time_sum (n - 1);;
 
 (* What is its complexity? *) 
 let sum_complexity () : complexity =
-  failwith "sum_complexity not yet implemented" ;;
+  Linear;;
 
 (*......................................................................
 Exercise 11: Divider Recurrence Equations
@@ -487,11 +496,12 @@ let rec divider (x : int) : int =
   else if x <= 1 then 0
   else 1 + divider (x / 2);;
   
-let time_divider (n : int) : int =
-  failwith "time_sum not yet implemented" ;;
+let rec time_divider (n : int) : int =
+  if n = 0 || n = 1 then k
+  else k + time_divider (n / 2);;
 
 let divider_complexity () : complexity =
-  failwith "time_complexity not yet implemented" ;;
+  Logarithmic;;
 
 (*......................................................................
 Exercise 12: Find_min recurrence equations
@@ -517,18 +527,19 @@ let rec find_min (xs : int list) : int =
   | _ -> let l1, l2 = split xs in
          min (find_min l1) (find_min l2) ;;
 
-let time_split (n : int) : int =
-  failwith "time_split not yet implemented" ;;
+let rec time_split (n : int) : int =
+  if n = 0 || n = 1 then k
+  else k + time_split (n - 2) ;;
 
 let split_complexity () : complexity =
-  failwith "split_complexity not yet implemented" ;;
+  Linear ;;
 
-let time_find_min (n : int) : int =
-  failwith "time_find_min not yet implemented" ;;
+let rec time_find_min (n : int) : int =
+  if n = 0 || n = 1 then k
+  else (time_split n) + 2 * time_find_min (n / 2) ;;
 
 let find_min_complexity () : complexity =
-  failwith "find_min_complexity not yet implemented" ;;
-
+    LogLinear ;;
 
 (*======================================================================
 Part 4: Tradeoffs
@@ -618,7 +629,8 @@ let time_multiply (mult : int -> int -> int)
                   (x : int)
                   (y : int)
                 : float =
-  failwith "time_multiply not yet implemented";;
+  let _, time = CS51.call_timed (fun (x, y) -> mult x y) (x, y) in
+  time ;;
 
 (*......................................................................
 Exercise 14: Fill in the table below:
