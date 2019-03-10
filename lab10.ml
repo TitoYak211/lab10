@@ -108,7 +108,7 @@ module MergeSort : SORT =
 Exercise 3: List the functions provided by the InsertionSort
 module. List the functions provided by the MergeSort module.
 ....................................................................*)
-sort : ('a -> 'a -> bool) -> 'a list -> 'a list
+(* sort : ('a -> 'a -> bool) -> 'a list -> 'a list *)
   
 (*....................................................................
 Exercise 4: Compare the time it takes for merge sort and insertion
