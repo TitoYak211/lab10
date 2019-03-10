@@ -417,12 +417,6 @@ let rec insert xs x =
 (*......................................................................
 Complete the recurrence equations and time complexity of this function:
 ......................................................................*)
-
-let time_insert (n : int) : int =
-    failwith "time_insert not yet implemented" ;;
-
-let insert_complexity () : complexity =
-    failwith "insert_complexity not yet implemented" ;;
 (*......................................................................
                             SOLUTION
 
@@ -579,7 +573,8 @@ let mult_grade_school (x : int) (y : int) =
            let new_carry, place = (prod / base, prod mod base) in
            place * placevalue +
              helper  (x / base) new_carry (placevalue * base)
-    in if y < 0 || y > 9 then raise (Invalid_argument "multiple digit or neg. y")
+    in if y < 0 || y > 9 then raise (Invalid_argument 
+                                     "multiple digit or neg. y")
        else helper x 0 1 in
   let rec iterate_y y placevalue =
     if y = 0 then 0
